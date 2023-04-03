@@ -1,0 +1,9 @@
+Currently:
+	GridManager checks to see if tile has been indexed yet (procedural).
+	If tile does not exist, GridManager calculates tile center by multiplying int vector by tile size (this will give an relative offset from the GridManager actor's origin), does a line trace at that location, with the Z length of the trace determined by TraceTestDistance property.
+	GridManager adds first hit if any to the grid pool. If there are multiple hits, it checks to make sure that the others are not inside of the bounding box of any other detected hits (this might be a bug);
+
+Proposed:
+	GridArea populates hit detections during construction so may be able to get away with just using a 2D array or a map.
+	Maybe rename to BoundedGridManager?
+	Feature todo: option whether to mark tiles immediately out of bounds as blocking
