@@ -1,0 +1,76 @@
+abstract GridManager:
+
+	GridTileCalculator
+		-- class reference, TSubclassOf<UGridTileCalculator>
+
+	GridTilePopulatorComponent
+		-- two options
+			1. GridManager is abstract. Two implementations default the component to be either Bounded or Procedural type
+				Bounded implementation take advantage of a box component extension
+					Can hide other shapecomponent sections in editor?
+				^^ probably this one ^^
+			2. populator is an object, specific class is selected
+				Object would need to use actor transform and actor reference to do line trace tests
+				Uglier perhaps, but maybe reasonable since component lifecycle events aren't needed yet
+	
+	InstancedStaticMeshComponent
+		-- for rendering debug visualizations
+		
+	BoxComponent
+		-- not visible to editor
+		-- for visualizing the extents
+		--	-- may not have effect for procedural
+			-- register event listener on populator to update component extents reactively (?)
+		
+	OnConstruction:
+		if draw debug traces enabled:
+			DrawDebugTraces (will only have effect for bounded populator)
+		
+	DrawDebugTraces:
+		For each tile in the GridTilePopulator, create transform at tile origin and insert into array. Use `Create Instances` on InstancedStaticMeshComponent.
+		
+	|| BoundedGridManager
+	|| ProceduralGridManager
+		
+abstract GridTilePopulator component:
+	-- exclusively but only responsible for calculating the origin of individual tiles and defining the shape of the grid
+	-- does not store state
+	abstract GetExtent
+		-- returns current LxW extent of grid
+	abstract IsValidCoordinate(FIntVector2) -> bool
+	
+	TileIterator (?)
+	
+	event dispatcher OnExtentsChanged (?)
+		-- old extents
+		-- new extents
+	
+	|| BoundedGridTilePopulator
+		FIntVector2 dimensions
+			default 3x3
+		override GetExtent
+			-- just returns the dimensions
+		override IsValidCoordinate
+			-- true if coordinate in bounds
+		override OnRegister
+			-- populate all the tiles in bounds
+	|| ProceduralGridTilePopulator
+		override GetExtent
+			-- TODO
+		override IsValidCoordinate
+			-- true always (?)
+	
+
+UGridTileCalculator:
+	-- abstract class
+	
+	SetTileSize(double)
+	
+	CalculateTileOrigin(FIntVector2) -> FVector2
+		-- abstract
+		
+	GetNeighbours() -> list
+	
+	|| USquareGridCalculator
+	|| UHexagonalGridCalculator
+	|| UTriangularGridCalculator
