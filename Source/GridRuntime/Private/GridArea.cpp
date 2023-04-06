@@ -79,23 +79,35 @@ void AGridArea::Tick(float DeltaTime)
 	
 }
 
-void AGridArea::DrawAllDebugTraces() const
+void AGridArea::DrawAllDebugTraces()
 {
 	ClearDebugTraces();
 	DebugTracerInstancedMesh->ClearInstances();
+	TArray<FVector2D> Centers;
+	GetDebugTraceCenters(Centers);
+	// for (int x = 0; x < GridDimensions.X; ++x)
+	// {
+	// 	for (int y = 0; y < GridDimensions.Y; ++y)
+	// 	{
+	// 		Transforms.Add(
+	// 			FTransform(
+	// 				FRotator::ZeroRotator,
+	// 				GridToRelativePosition(x, y),
+	// 				FVector(1, 1, -AreaHeight)
+	// 			)
+	// 		);
+	// 	}
+	// }
 	TArray<FTransform> Transforms;
-	for (int x = 0; x < GridDimensions.X; ++x)
+	for (auto& Center: Centers)
 	{
-		for (int y = 0; y < GridDimensions.Y; ++y)
-		{
-			Transforms.Add(
-				FTransform(
-					FRotator::ZeroRotator,
-					GridToRelativePosition(x, y),
-					FVector(1, 1, -AreaHeight)
-				)
-			);
-		}
+		Transforms.Add(
+			FTransform(
+				FRotator::ZeroRotator,
+				{Center.X, Center.Y, 0},
+				FVector(1, 1, -AreaHeight)
+			)
+		);
 	}
 	DebugTracerInstancedMesh->AddInstances(Transforms, false, false);
 	DebugTracerInstancedMesh->SetVisibility(VisualizeTileSensingTraces, true);

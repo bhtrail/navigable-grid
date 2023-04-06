@@ -8,7 +8,8 @@
 #include "Components/InstancedStaticMeshComponent.h"
 #include "GridArea.generated.h"
 
-UCLASS(Blueprintable)
+// TODO rename/merge with existing grid manager
+UCLASS(Blueprintable, Abstract)
 class GRIDRUNTIME_API AGridArea : public AActor
 {
 	
@@ -16,11 +17,12 @@ class GRIDRUNTIME_API AGridArea : public AActor
 
 	virtual void OnConstruction(const FTransform& Transform) override;
 
-	UPROPERTY(VisibleDefaultsOnly, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UBoxComponent> ShapeComponent;
-
 	UPROPERTY()
 	TObjectPtr<UInstancedStaticMeshComponent> DebugTracerInstancedMesh;
+
+protected:
+	UPROPERTY(VisibleDefaultsOnly, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UBoxComponent> ShapeComponent;
 	
 public:	
 	// Sets default values for this actor's properties
@@ -43,16 +45,17 @@ public:
 	FIntVector2 GridDimensions = FIntVector2(3, 3);
 
 	// Height of the grid area in units
+	// TODO move to populator?
 	UPROPERTY(EditAnywhere, Category=Grid)
 	float AreaHeight = 100;
 
 	// TODO doc
-	UPROPERTY(EditAnywhere, Category=Grid)
+	UPROPERTY(EditAnywhere, AdvancedDisplay, Category=Grid)
 	bool VisualizeTileSensingTraces;
 	
 
-private:
-	void DrawAllDebugTraces() const;
+protected:
+	void DrawAllDebugTraces();
 
 	FVector GridToRelativePosition(int x, int y) const;
 
@@ -61,4 +64,9 @@ private:
 		DebugTracerInstancedMesh->ClearInstances();
 	}
 
+	virtual void GetDebugTraceCenters(TArray<FVector2D>& Out)
+	{
+		// TODO warn
+		Out = {};
+	}
 };
