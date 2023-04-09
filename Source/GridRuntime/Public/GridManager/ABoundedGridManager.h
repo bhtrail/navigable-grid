@@ -37,6 +37,27 @@ protected:
 		);
 	}
 
+	virtual void BeginPlay() override
+	{
+		IndexAllTilesWithinBounds();
+	}
+
+	UFUNCTION(BlueprintCallable)
+	void IndexAllTilesWithinBounds()
+	{
+		for (int X = 0; X < GridDimensions.X; X++)
+		{
+		
+			for (int Y = 0; Y < GridDimensions.Y; ++Y)
+			{
+			
+				GetTileOrigin({X, Y});
+			
+			}
+		
+		}
+	}
+
 public:
 
 	virtual void GetAllTileCenters(TArray<FVector2D>& Out) override;

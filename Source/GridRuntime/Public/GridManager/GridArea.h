@@ -5,6 +5,7 @@
 #include "TileCalculator/SquareTileCalculator.h"
 
 #include "CoreMinimal.h"
+#include "CollisionDebugDrawingPublic.h"
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h"
 #include "Components/InstancedStaticMeshComponent.h"
@@ -86,15 +87,44 @@ protected:
 	}
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	FVector GetTileOrigin(const FIntPoint Coordinate);
+	FHitResult DetectTileSurfaces(const FVector Start, const FVector End);
 
-	FVector GetTileOrigin_Implementation(const FIntPoint Coordinate)
+	FHitResult DetectTileSurfaces_Implementation(const FVector Start, const FVector End)
+	{
+		FHitResult Hit;
+		GetWorld()->LineTraceSingleByProfile(
+			Hit,
+			Start,
+			End,
+			TEXT("None"),
+			FCollisionQueryParams(
+				"Tag",
+				true,
+				this
+			)
+		);
+		if(GEngine)
+			GEngine->AddOnScreenDebugMessage(
+				-1,
+				10.0f,
+				FColor::Yellow,
+				Hit.Location.ToString()
+			);
+		DrawLineTraces(GetWorld(), Start, End, {Hit}, 10);
+		return Hit;
+	}
+
+	UFUNCTION(BlueprintCallable)
+	FVector GetTileOrigin(const FIntPoint Coordinate)
 	{
 		// TODO
-		auto Rel = GetTileCalculator()->GridToRelative(FIntVector2(Coordinate.X, Coordinate.Y), TileSize);
-		auto World = Rel + FVector2D(GetActorLocation().X, GetActorLocation().Y);
-		
-		return {World.X, World.Y, 0};
+		const auto Rel = GetTileCalculator()->GridToRelative(FIntVector2(Coordinate.X, Coordinate.Y), TileSize);
+		const auto World = Rel + FVector2D(GetActorLocation().X, GetActorLocation().Y);
+		const auto Hit = DetectTileSurfaces(
+			FVector(World.X, World.Y, VolumeExtentWorldZTop()),
+			FVector(World.X, World.Y, VolumeExtentWorldZBottom())
+		);
+		return Hit.Location;
 	}
 
 private:
