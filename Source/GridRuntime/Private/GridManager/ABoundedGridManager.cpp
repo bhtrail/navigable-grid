@@ -7,6 +7,8 @@ ABoundedGridManager::ABoundedGridManager()
 {
 
 	TilePopulator = CreateDefaultSubobject<UBoundedGridTilePopulator>("TilePopulator");
-	TilePopulator->SetupAttachment(ShapeComponent);
+	SetRootComponent(TilePopulator);
+
+	InitDebugTraceSubcomponent();
 	
 }

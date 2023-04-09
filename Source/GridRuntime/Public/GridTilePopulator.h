@@ -16,11 +16,12 @@ class GRIDRUNTIME_API UGridTilePopulator : public UPrimitiveComponent
 	
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category=Grid)
 	TSubclassOf<UTileCalculator> TileCalculatorClass = USquareTileCalculator::StaticClass();
 
 protected:
-	UPROPERTY(EditAnywhere)
+	// X and Y size of each grid tile in units
+	UPROPERTY(EditAnywhere, Category=Grid)
 	double TileSize = 100;
 	
 	TWeakObjectPtr<UTileCalculator> TileCalculator;

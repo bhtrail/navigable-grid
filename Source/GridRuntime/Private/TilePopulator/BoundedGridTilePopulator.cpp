@@ -18,6 +18,26 @@ void UBoundedGridTilePopulator::OnRegister()
 {
 
 	Super::OnRegister();
+
+	if (IsValid(DebugShapeComponent))
+	{
+		DebugShapeComponent->DestroyComponent();
+	}
+
+	DebugShapeComponent = NewObject<UBoxComponent>(this);
+	DebugShapeComponent->SetupAttachment(this);
+	DebugShapeComponent->RegisterComponent();
+	DebugShapeComponent->SetRelativeLocation(
+		GetVisualCenter()
+	);
+	DebugShapeComponent->SetBoxExtent(
+		FVector(
+			TileSize * GridDimensions.X / 2,
+			TileSize * GridDimensions.Y / 2,
+			// AreaHeight / 2
+			100 / 2
+		)
+	);
 	
 }
 
@@ -60,8 +80,18 @@ void UBoundedGridTilePopulator::GetAllTileCenters(TArray<FVector2D>& Out)
 	
 }
 
-// TArray<FVector3> UBoundedGridTilePopulator::GetAllOrigins()
-// {
-// 	return
-// }
+FVector UBoundedGridTilePopulator::GetVisualCenter()
+{
 
+	// TODO in the future
+	// Move this to the abstract class
+	// Use current extents and find the midpoint in each axis
+	// this will be the visual center
+
+	return FVector(
+		GridDimensions.X * TileSize / 2,
+		GridDimensions.Y * TileSize / 2,
+		0
+	);
+	
+}

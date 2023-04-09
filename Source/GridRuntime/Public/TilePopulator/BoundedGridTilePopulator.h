@@ -15,6 +15,12 @@ class GRIDRUNTIME_API UBoundedGridTilePopulator : public UGridTilePopulator
 
 	virtual void OnRegister() override;
 	
+	UPROPERTY()
+	TObjectPtr<UBoxComponent> DebugShapeComponent;
+
+	UPROPERTY(EditAnywhere, Category=Grid)
+	FIntVector2 GridDimensions = {3, 3};
+	
 public:
 	// Sets default values for this component's properties
 	UBoundedGridTilePopulator();
@@ -28,9 +34,9 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
-	UPROPERTY(EditAnywhere)
-	FIntVector2 GridDimensions = {3, 3};
-
 	virtual void GetAllTileCenters(TArray<FVector2D>& Out) override;
+
+private:
+	FVector GetVisualCenter();
 	
 };

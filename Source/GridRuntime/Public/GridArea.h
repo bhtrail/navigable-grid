@@ -19,10 +19,6 @@ class GRIDRUNTIME_API AGridArea : public AActor
 
 	UPROPERTY()
 	TObjectPtr<UInstancedStaticMeshComponent> DebugTracerInstancedMesh;
-
-protected:
-	UPROPERTY(VisibleDefaultsOnly, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UBoxComponent> ShapeComponent;
 	
 public:	
 	// Sets default values for this actor's properties
@@ -32,17 +28,21 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	void InitDebugTraceSubcomponent()
+	{
+		auto debugMesh = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("/Grid/Meshes/Debug/DebugSenseVisualization"));
+		auto debugMaterial = ConstructorHelpers::FObjectFinder<UMaterial>(TEXT("/Grid/Materials/Debug/TileVizualizeDecal"));
+		DebugTracerInstancedMesh = CreateDefaultSubobject<UInstancedStaticMeshComponent>(TEXT("DebugMeshComp"));
+		DebugTracerInstancedMesh->SetMobility(EComponentMobility::Static);
+		DebugTracerInstancedMesh->SetStaticMesh(debugMesh.Object);
+		DebugTracerInstancedMesh->SetMaterial(0, debugMaterial.Object);
+		DebugTracerInstancedMesh->SetCastShadow(false);
+		DebugTracerInstancedMesh->SetupAttachment(RootComponent);
+	}
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	// X and Y size of each grid tile in units
-	UPROPERTY(EditAnywhere, Category=Grid)
-	float TileSize = 100;
-
-	// TODO doc
-	UPROPERTY(EditAnywhere, Category=Grid)
-	FIntVector2 GridDimensions = FIntVector2(3, 3);
 
 	// Height of the grid area in units
 	// TODO move to populator?
@@ -56,8 +56,6 @@ public:
 
 protected:
 	void DrawAllDebugTraces();
-
-	FVector GridToRelativePosition(int x, int y) const;
 
 	void ClearDebugTraces() const
 	{
