@@ -4,8 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GridArea.h"
-#include "TilePopulator/BoundedGridTilePopulator.h"
-#include "UObject/Object.h"
 #include "ABoundedGridManager.generated.h"
 
 /**
@@ -19,11 +17,30 @@ class GRIDRUNTIME_API ABoundedGridManager : public AGridArea
 
 	ABoundedGridManager();
 
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<UBoundedGridTilePopulator> TilePopulator;
+	UPROPERTY(EditAnywhere, Category=Grid)
+	FIntVector2 GridDimensions = {3, 3};
 
-	virtual void GetDebugTraceCenters(TArray<FVector2D>& Out) override
+protected:
+
+	virtual void OnConstruction(const FTransform& Transform) override
 	{
-		TilePopulator->GetAllTileCenters(Out);
+		Super::OnConstruction(Transform);
+		DebugShapeComponent->SetBoxExtent(
+			FVector(
+				TileSize * GridDimensions.X / 2,
+				TileSize * GridDimensions.Y / 2,
+				TestVolumeHeight / 2
+			)
+		);
+		DebugShapeComponent->SetRelativeLocation(
+			GetVisualCenter()
+		);
 	}
+
+public:
+
+	virtual void GetAllTileCenters(TArray<FVector2D>& Out) override;
+
+private:
+	FVector GetVisualCenter() const;
 };
