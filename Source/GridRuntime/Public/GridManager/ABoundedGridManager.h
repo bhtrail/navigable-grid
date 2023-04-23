@@ -22,6 +22,11 @@ class GRIDRUNTIME_API ABoundedGridManager : public AGridArea
 
 protected:
 
+	virtual void Tick(float DeltaSeconds) override
+	{
+		Super::Tick(DeltaSeconds);
+	}
+
 	virtual void OnConstruction(const FTransform& Transform) override
 	{
 		Super::OnConstruction(Transform);
@@ -39,6 +44,7 @@ protected:
 
 	virtual void BeginPlay() override
 	{
+		Super::BeginPlay();
 		IndexAllTilesWithinBounds();
 	}
 

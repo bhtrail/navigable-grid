@@ -31,6 +31,8 @@ void AGridArea::OnConstruction(const FTransform& Transform)
 	
 	DebugTracerInstancedMesh->SetWorldLocation(GetActorLocation() + FVector::UnitZ() * TestVolumeHeight / 2);
 	DrawAllDebugTraces();
+
+	GridState = NewObject<UGridState>(this, GridStateClass);
 	
 }
 
