@@ -6,7 +6,7 @@
 #include "GridStatePlayerPerspective.h"
 #include "GridDefaultPlayerController.generated.h"
 
-UCLASS()
+UCLASS(Blueprintable)
 class GRIDRUNTIME_API AGridDefaultPlayerController : public APlayerController
 {
 	GENERATED_BODY()
@@ -32,16 +32,9 @@ public:
 				.Append(Update.New.Occupant.ID.ToString())
 		);
 
-		RelativeState->ApplyUpdate(Update);
-
 		UKismetSystemLibrary::PrintString(
 			GetWorld(),
 			RelativeState->GetCell(Update.New.Position).Occupant.ID.ToString()
-		);
-
-		PlayerPerspective->SpawnAvatar(
-			TempAvatar,
-			Update.New.Position
 		);
 		
 	}
@@ -57,9 +50,9 @@ public:
 	AGridDefaultPlayerController();
 
 protected:
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	TWeakObjectPtr<UGridStatePlayerPerspective> PlayerPerspective;
+	
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Default")
+	TObjectPtr<UGridStatePlayerPerspective> PlayerPerspective;
 	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

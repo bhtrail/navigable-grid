@@ -17,6 +17,7 @@ class GRIDRUNTIME_API UDefaultGridState : public UGridState
 	GENERATED_BODY()
 
 	TMap<FIntVector, FGridCell> StateMap;
+	TMap<FGuid, FIntVector> OccupantPositions;
 
 public:
 	// TODO return bool and give result by reference
@@ -31,6 +32,7 @@ public:
 		return {};
 	}
 
+private:
 	virtual FGridCellUpdate UpdateCell(const FIntVector Position, const FGridCell New) override
 	{
 		FGridCellUpdate Update;
@@ -45,12 +47,58 @@ public:
 		return Update;
 	}
 
-	// TODO maybe should be on superclass
-	void ApplyUpdate(FGridCellUpdate Update)
+	// method that removes a cell from the state map
+	virtual FGridCellUpdate RemoveCell(const FIntVector Position) /* TODO override */
 	{
-
-		UpdateCell(Update.New.Position, Update.New);
-		
+		FGridCellUpdate Update;
+		if (StateMap.Contains(Position))
+		{
+			Update.Old = StateMap[Position];
+			StateMap.Remove(Position);
+			Update.New = Update.Old;
+			Update.New.Occupant = {};
+		}
+		return Update;
 	}
+
+public:
+	virtual FGridCell AddOccupant(const FIntVector Position) override
+	{
+		FGridCell Cell;
+		Cell.Position = Position;
+		Cell.Occupant.ID = FGuid::NewGuid();
+		UpdateCell(Position, Cell);
+		OccupantPositions.Add(Cell.Occupant.ID, Position);
+		return Cell;
+	}
+
+	FGridCellOccupantMoved MoveOccupant(const FGuid OccupantID, const FIntVector NewPosition)
+	{
+		if (OccupantPositions.Contains(OccupantID))
+		{
+			FGridCellOccupantMoved Moved;
+			Moved.OccupantID = OccupantID;
+			Moved.From = RemoveCell(OccupantPositions[OccupantID]);
+			Moved.To = UpdateCell(NewPosition, {
+				NewPosition,
+				{
+					OccupantID
+				}
+			});
+			// update the new cell with the occupant
+		
+			OccupantPositions[OccupantID] = NewPosition;
+			return Moved;
+		}
+		// log an error
+		UE_LOG(
+			GridRuntime,
+			Error,
+			TEXT("Tried to move occupant that doesn't exist: %s"),
+			*OccupantID.ToString()
+		);
+		return {};
+	}
+
 	
 };

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Object.h"
+#include "IGridRuntime.h"
 #include "GridState.generated.h"
 
 USTRUCT()
@@ -16,6 +17,7 @@ struct GRIDRUNTIME_API FGridCellOccupant
 	FGuid ID;
 	
 };
+
 
 USTRUCT()
 struct GRIDRUNTIME_API FGridCell
@@ -45,6 +47,21 @@ struct GRIDRUNTIME_API FGridCellUpdate
 	
 };
 
+USTRUCT()
+struct GRIDRUNTIME_API FGridCellOccupantMoved
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	FGuid OccupantID;
+
+	UPROPERTY()
+	FGridCellUpdate From;
+
+	UPROPERTY()
+	FGridCellUpdate To;
+};
+
 /**
  * 
  */
@@ -68,6 +85,20 @@ public:
 	}
 
 	virtual FGridCellUpdate UpdateCell(const FIntVector Position, const FGridCell New)
+	{
+		// TODO warn
+		return {};
+	}
+	
+	UFUNCTION()
+	virtual FGridCell AddOccupant(const FIntVector Position)
+	{
+		// TODO warn
+		return {};
+	}
+
+	UFUNCTION()
+	virtual FGridCellOccupantMoved MoveOccupant(const FGuid OccupantID, const FIntVector NewPosition)
 	{
 		// TODO warn
 		return {};

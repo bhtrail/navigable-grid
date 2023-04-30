@@ -8,7 +8,6 @@ AGridDefaultPlayerController::AGridDefaultPlayerController()
 	
 	PrimaryActorTick.bCanEverTick = true;
 	PlayerPerspective = CreateDefaultSubobject<UGridStatePlayerPerspective>("PlayerPerspective");
-	PlayerPerspective->RegisterComponent();
 
 	RelativeState = CreateDefaultSubobject<UDefaultGridState>("RelativeState");
 

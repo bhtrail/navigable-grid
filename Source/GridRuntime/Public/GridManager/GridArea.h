@@ -12,7 +12,20 @@
 #include "GridState/DefaultGridState.h"
 #include "GridState/GridState.h"
 #include "Kismet/GameplayStatics.h"
+#include "IGridRuntime.h"
 #include "GridArea.generated.h"
+
+USTRUCT()
+struct GRIDRUNTIME_API FGridOccupantSpawnAction
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	FGridCell Cell;
+
+	UPROPERTY()
+	TSubclassOf<UObject> AvatarClass;
+};
 
 // TODO rename/merge with existing grid manager
 UCLASS(Blueprintable, Abstract)
@@ -30,34 +43,10 @@ public:
 protected:
 	
 	virtual void BeginPlay() override;
-
-	float total = 0;
 	
 	virtual void Tick(float DeltaSeconds) override
 	{
 		Super::Tick(DeltaSeconds);
-		if (HasAuthority())
-		{
-			total += DeltaSeconds;
-			if (total > 3)
-			{
-				total = 0;
-				auto loc = FIntVector{
-					FMath::RandRange(0, 20),
-					FMath::RandRange(0, 10),
-					0
-				};
-				FGridCellUpdate Update = GridState->UpdateCell(
-					loc,
-					{
-						loc,
-						{FGuid::NewGuid()}
-					}
-				);
-				NotifyUpdateListeners(Update);
-			}
-		}
-		
 	}
 
 	virtual void TickActor(float DeltaTime, ELevelTick TickType, FActorTickFunction& ThisTickFunction) override
@@ -77,32 +66,54 @@ public:
 	{
 		return static_cast<AGridArea*>(UGameplayStatics::GetActorOfClass(Context, StaticClass()));
 	}
-	
-	DECLARE_DELEGATE_TwoParams(FStateUpdateDelegate, TWeakObjectPtr<UGridState>, FGridCellUpdate);
-	FStateUpdateDelegate GridStateUpdateDelegate;
+
+// ~Game mode and player interactions
+
+// State change delegates
+
+	// Delegate called FGridOccupantSpawnDelegate that takes a FGridOccupantSpawnAction
+	DECLARE_MULTICAST_DELEGATE_OneParam(FGridOccupantSpawnDelegate, FGridOccupantSpawnAction);
+	FGridOccupantSpawnDelegate GridOccupantSpawnDelegate;
+
+	// Delegate for when an occupant is moved
+	DECLARE_MULTICAST_DELEGATE_OneParam(FGridOccupantMoveDelegate, FGridCellOccupantMoved);
+	FGridOccupantMoveDelegate GridOccupantMoveDelegate;
 
 private:
-	
-	void NotifyUpdateListeners(FGridCellUpdate Update) const
+
+	void NotifyOccupantSpawned(FGridOccupantSpawnAction Update) const
 	{
-		// TODO this is just to verify replication on playercontroller
-		// Won't be needed once pipeline is complete
-		// So remove this condition
 		if (HasAuthority())
 		{
 			UKismetSystemLibrary::PrintString(
 			   GetWorld(),
-			   TEXT("Notifying listeners"),
+			   TEXT("GridArea: Notifying Occupant Spawned"),
 			   true,
 			   true,
 			   FLinearColor::Red,
 			   3
 		   );
-			GridStateUpdateDelegate.ExecuteIfBound(GridState, Update);
+			GridOccupantSpawnDelegate.Broadcast(Update);
 		}
 	}
 
-// ~Game mode and player interactions
+	void NotifyOccupantMoved(FGridCellOccupantMoved Update) const
+	{
+		if (HasAuthority())
+		{
+			UKismetSystemLibrary::PrintString(
+			   GetWorld(),
+			   TEXT("GridArea: Notifying Occupant Moved"),
+			   true,
+			   true,
+			   FLinearColor::Red,
+			   3
+		   );
+			GridOccupantMoveDelegate.Broadcast(Update);
+		}
+	}
+
+// ~State change delegates
 
 // Grid construction and spatial utilities
 
@@ -226,5 +237,56 @@ private:
 	// TWeakObjectPtr<UGridState> GridState;
 	
 // ~Grid state
+
+// Grid actions and dispatching
+
+public:
+	// blueprint callable function that takes a coordinate and a uclass pointer, updates the state object, and notifies listeners of the result
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly)
+	void SpawnOccupant(const FIntVector Coordinate, const TSubclassOf<AActor> AvatarClass)
+	{
+		// TODO this is just to verify replication on playercontroller
+		// Won't be needed once pipeline is complete
+		// So remove this condition
+		if (HasAuthority())
+		{
+			UKismetSystemLibrary::PrintString(
+			   GetWorld(),
+			   TEXT("GridArea: Spawning Occupant"),
+			   true,
+			   true,
+			   FLinearColor::Red,
+			   3
+		   );
+			const auto SpawnAction = GridState->AddOccupant(Coordinate);
+			
+			NotifyOccupantSpawned({
+				SpawnAction,
+				AvatarClass
+			});
+		}
+	}
+	
+	// MoveOccupant takes an id and a coordinate and updates the state to move that id
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly)
+	void MoveOccupant(const FGuid OccupantId, const FIntVector NewPosition)
+	{
+		if (HasAuthority())
+		{
+			UKismetSystemLibrary::PrintString(
+			   GetWorld(),
+			   TEXT("GridArea: Moving Occupant"),
+			   true,
+			   true,
+			   FLinearColor::Red,
+			   3
+			);
+
+			const auto MoveAction = GridState->MoveOccupant(OccupantId, NewPosition);
+			NotifyOccupantMoved(MoveAction);
+		}
+	}
+
+// ~Grid actions and dispatching
 	
 };
