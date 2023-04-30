@@ -21,5 +21,11 @@ public:
 		// TODO warn
 		return FVector2d::Zero();
 	}
+
+	virtual FIntVector2 RelativeToGrid(const FVector2D Relative, const double TileSize)
+	{
+		// TODO warn
+		return {};
+	}
 	
 };

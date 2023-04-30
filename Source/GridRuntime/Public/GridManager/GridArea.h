@@ -118,6 +118,7 @@ private:
 // Grid construction and spatial utilities
 
 public:
+	
 	UFUNCTION(BlueprintCallable)
 	FVector GetTileOrigin(const FIntPoint Coordinate)
 	{
@@ -129,6 +130,15 @@ public:
 			FVector(World.X, World.Y, VolumeExtentWorldZBottom())
 		);
 		return Hit.Location;
+	}
+
+	// function that takes a world space FVector and returns the coordinate that represents it
+	UFUNCTION(BlueprintCallable)
+	FIntPoint GetCoordsForPosition(const FVector WorldLocation)
+	{
+		const auto Rel = FVector2D(WorldLocation.X, WorldLocation.Y) - FVector2D(GetActorLocation().X, GetActorLocation().Y);
+		const auto Grid = GetTileCalculator()->RelativeToGrid(Rel, TileSize);
+		return FIntPoint(Grid.X, Grid.Y);
 	}
 	
 protected:

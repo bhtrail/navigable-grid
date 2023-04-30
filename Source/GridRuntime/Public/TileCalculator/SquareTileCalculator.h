@@ -28,5 +28,16 @@ public:
 		const auto XYVector = BaseLine + FVector2D(TileSize, TileSize) * FVector2D(Coords.X, Coords.Y);
 		return XYVector;
 	}
+
+	virtual FIntVector2 RelativeToGrid(const FVector2D Relative, const double TileSize) override
+	{
+		const auto XYVector = Relative - FVector2D{0, 0};
+		const auto XYVectorDiv = XYVector / FVector2D(TileSize, TileSize);
+		const auto XYVectorDivInt = FIntVector2(
+			FMath::FloorToInt(XYVectorDiv.X),
+			FMath::FloorToInt(XYVectorDiv.Y)
+		);
+		return XYVectorDivInt;
+	}
 	
 };

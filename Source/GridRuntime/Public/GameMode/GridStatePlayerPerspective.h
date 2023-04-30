@@ -19,6 +19,7 @@ public:
 	// Sets default values for this component's properties
 	UGridStatePlayerPerspective();
 
+	UPROPERTY( BlueprintReadOnly )
 	TWeakObjectPtr<AGridArea> GridSingleton;
 	
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category="Default")
