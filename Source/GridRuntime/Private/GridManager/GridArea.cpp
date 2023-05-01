@@ -22,6 +22,9 @@ AGridArea::AGridArea()
 	
 	DebugShapeComponent = CreateDefaultSubobject<UBoxComponent>("DebugShapeComponent");
 	DebugShapeComponent->SetupAttachment(RootComponent);
+
+	PathTraceComponent = CreateDefaultSubobject<ULineComponent>("PathTraceComponent");
+	PathTraceComponent->SetupAttachment(RootComponent);
 	
 }
 

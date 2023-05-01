@@ -17,35 +17,6 @@ class GRIDRUNTIME_API AGridDefaultPlayerController : public APlayerController
 public:
 
 	UClass* TempAvatar;
-
-	UFUNCTION(NetMulticast, Reliable)
-	void TestRPC(FGridCellUpdate Update);
-
-	void TestRPC_Implementation( FGridCellUpdate Update )
-	{
-		
-		UKismetSystemLibrary::PrintString(
-			GetWorld(),
-			Update.Old.Position.ToString()
-				.Append(Update.Old.Occupant.ID.ToString())
-				.Append(" -> ")
-				.Append(Update.New.Occupant.ID.ToString())
-		);
-
-		UKismetSystemLibrary::PrintString(
-			GetWorld(),
-			RelativeState->GetCell(Update.New.Position).Occupant.ID.ToString()
-		);
-		
-	}
-
-	// TODO remove State param
-	void OnGridCellUpdate(TWeakObjectPtr<UGridState> State, FGridCellUpdate Update)
-	{
-
-		TestRPC(Update);
-		
-	}
 	
 	AGridDefaultPlayerController();
 
@@ -67,10 +38,7 @@ protected:
 
 	virtual void OnConstruction(const FTransform& Transform) override
 	{
-		PlayerPerspective->GridStatePlayerPerspectiveChangedDelegate.BindUObject(
-			this,
-			&AGridDefaultPlayerController::OnGridCellUpdate
-		);
+		Super::OnConstruction(Transform);
 	}
 
 public:

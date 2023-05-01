@@ -9,10 +9,10 @@
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h"
 #include "Components/InstancedStaticMeshComponent.h"
+#include "Components/LineComponent.h"
 #include "GridState/DefaultGridState.h"
 #include "GridState/GridState.h"
 #include "Kismet/GameplayStatics.h"
-#include "IGridRuntime.h"
 #include "GridArea.generated.h"
 
 USTRUCT()
@@ -120,9 +120,9 @@ private:
 public:
 	
 	UFUNCTION(BlueprintCallable)
+	// TODO this needs to take a 3d coordinate
 	FVector GetTileOrigin(const FIntPoint Coordinate)
 	{
-		// TODO idk what this todo was for /shrug
 		const auto Rel = GetTileCalculator()->GridToRelative(FIntVector2(Coordinate.X, Coordinate.Y), TileSize);
 		const auto World = Rel + FVector2D(GetActorLocation().X, GetActorLocation().Y);
 		const auto Hit = DetectTileSurfaces(
@@ -133,7 +133,7 @@ public:
 	}
 
 	// function that takes a world space FVector and returns the coordinate that represents it
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	FIntPoint GetCoordsForPosition(const FVector WorldLocation)
 	{
 		const auto Rel = FVector2D(WorldLocation.X, WorldLocation.Y) - FVector2D(GetActorLocation().X, GetActorLocation().Y);
@@ -298,5 +298,46 @@ public:
 	}
 
 // ~Grid actions and dispatching
+
+// Display/Drawing
+
+private:
+	
+	UPROPERTY()
+	TObjectPtr<ULineComponent> PathTraceComponent;
+
+	UPROPERTY(EditAnywhere)
+	float ZOffset = 10;
+
+	UPROPERTY(EditAnywhere)
+	FLinearColor PathColor = FLinearColor::Red;
+
+	UPROPERTY(EditAnywhere)
+	float LineThickness = 5;
+
+public:
+	
+	UFUNCTION(BlueprintCallable)
+	void SetGridPath(const TArray<FIntVector>& Path)
+	{
+
+		// map each point in path to the world space tile origin
+		TArray<FVector> PathPoints;
+		for (auto& Point : Path)
+		{
+			const auto TileOrigin = GetTileOrigin({
+				Point.X,
+				Point.Y
+			});
+			PathPoints.Add(TileOrigin + FVector(0, 0, ZOffset));
+		}
+		
+		PathTraceComponent->SetPoints(PathPoints);
+		PathTraceComponent->LineColor = PathColor;
+		PathTraceComponent->LineThickness = LineThickness;
+		
+	}
+
+// ~Display/Drawing
 	
 };
