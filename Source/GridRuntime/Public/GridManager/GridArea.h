@@ -339,5 +339,15 @@ public:
 	}
 
 // ~Display/Drawing
+
+// Pathfinding
+
+	// Function that takes a coordinates for a source and a destination and calculates the shortest path using A*
+	// and returns a list of grid coordinates
+	UFUNCTION(BlueprintCallable)
+	bool FindPath(const FIntVector Source, const FIntVector Destination, TArray<FIntVector>& OutPath);
+	
+
+// ~Pathfinding
 	
 };

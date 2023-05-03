@@ -27,5 +27,17 @@ public:
 		// TODO warn
 		return {};
 	}
+
+	// TODO should be 3d coords shrug
+	virtual void GetNeighbours(const FIntVector Coords, TArray<FIntVector>& Neighbours)
+	{
+		// TODO warn
+	}
+
+	virtual int GetDistance(const FIntVector Start, const FIntVector End)
+	{
+		// TODO warn
+		return 0;
+	}
 	
 };

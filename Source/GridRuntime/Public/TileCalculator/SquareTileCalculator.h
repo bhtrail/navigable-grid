@@ -39,5 +39,21 @@ public:
 		);
 		return XYVectorDivInt;
 	}
+
+	virtual void GetNeighbours(const FIntVector Coords, TArray<FIntVector>& Neighbours) override
+	{
+		ensure(Neighbours.IsEmpty());
+		// TODO needs to be 3d
+		Neighbours.Add(FIntVector(Coords.X - 1, Coords.Y, 0));
+		Neighbours.Add(FIntVector(Coords.X + 1, Coords.Y, 0));
+		Neighbours.Add(FIntVector(Coords.X, Coords.Y - 1, 0));
+		Neighbours.Add(FIntVector(Coords.X, Coords.Y + 1, 0));
+	}
+
+	virtual int GetDistance(const FIntVector Start, const FIntVector End) override
+	{
+		// manhattan distance
+		return FMath::Abs(Start.X - End.X) + FMath::Abs(Start.Y - End.Y);
+	}
 	
 };
