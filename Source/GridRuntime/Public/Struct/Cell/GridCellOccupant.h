@@ -5,13 +5,13 @@
 #include "CoreMinimal.h"
 #include "GridCellOccupant.generated.h"
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct GRIDRUNTIME_API FGridCellOccupant
 {
 	
 	GENERATED_BODY()
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite)
 	FGuid ID;
 	
 };

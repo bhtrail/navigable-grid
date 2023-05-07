@@ -32,7 +32,7 @@ public:
 		OccupantId = Id;
 	}
 
-	UFUNCTION(BlueprintNativeEvent)
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	FGuid GetOccupantId();
 
 	virtual FGuid GetOccupantId_Implementation()
@@ -40,10 +40,10 @@ public:
 		return OccupantId;
 	}
 
-	UFUNCTION(BlueprintNativeEvent)
-	bool MoveTo(const FGridCell& Cell);
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	bool MoveTo(const FIntVector& CellCoordinate);
 
-	virtual bool MoveTo_Implementation(const FGridCell& Cell)
+	virtual bool MoveTo_Implementation(const FIntVector& CellCoordinate)
 	{
 		return false;
 	}

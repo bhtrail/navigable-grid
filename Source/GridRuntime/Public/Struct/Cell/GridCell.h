@@ -12,10 +12,10 @@ struct GRIDRUNTIME_API FGridCell
 
 	GENERATED_BODY()
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite)
 	FIntVector Position;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite)
 	FGridCellOccupant Occupant;
 	
 };
