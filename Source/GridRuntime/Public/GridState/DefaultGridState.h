@@ -6,6 +6,7 @@
 #include "GridState.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "UObject/Object.h"
+#include "IGridRuntime.h"
 #include "DefaultGridState.generated.h"
 
 /**

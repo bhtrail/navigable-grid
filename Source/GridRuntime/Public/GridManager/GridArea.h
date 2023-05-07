@@ -13,19 +13,8 @@
 #include "GridState/DefaultGridState.h"
 #include "GridState/GridState.h"
 #include "Kismet/GameplayStatics.h"
+#include "Struct/Action/GridOccupantSpawnAction.h"
 #include "GridArea.generated.h"
-
-USTRUCT()
-struct GRIDRUNTIME_API FGridOccupantSpawnAction
-{
-	GENERATED_BODY()
-
-	UPROPERTY()
-	FGridCell Cell;
-
-	UPROPERTY()
-	TSubclassOf<UObject> AvatarClass;
-};
 
 // TODO rename/merge with existing grid manager
 UCLASS(Blueprintable, Abstract)

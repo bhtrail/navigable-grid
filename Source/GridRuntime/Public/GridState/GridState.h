@@ -3,64 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Struct/Action/State/GridCellOccupantMoved.h"
+#include "Struct/Action/State/GridCellUpdate.h"
+#include "Struct/Cell/GridCell.h"
 #include "UObject/Object.h"
-#include "IGridRuntime.h"
 #include "GridState.generated.h"
-
-USTRUCT()
-struct GRIDRUNTIME_API FGridCellOccupant
-{
-	
-	GENERATED_BODY()
-
-	UPROPERTY()
-	FGuid ID;
-	
-};
-
-
-USTRUCT()
-struct GRIDRUNTIME_API FGridCell
-{
-
-	GENERATED_BODY()
-
-	UPROPERTY()
-	FIntVector Position;
-
-	UPROPERTY()
-	FGridCellOccupant Occupant;
-	
-};
-
-USTRUCT()
-struct GRIDRUNTIME_API FGridCellUpdate
-{
-	
-	GENERATED_BODY()
-
-	UPROPERTY()
-	FGridCell Old;
-
-	UPROPERTY()
-	FGridCell New;
-	
-};
-
-USTRUCT()
-struct GRIDRUNTIME_API FGridCellOccupantMoved
-{
-	GENERATED_BODY()
-
-	UPROPERTY()
-	FGuid OccupantID;
-
-	UPROPERTY()
-	FGridCellUpdate From;
-
-	UPROPERTY()
-	FGridCellUpdate To;
-};
 
 /**
  * 
