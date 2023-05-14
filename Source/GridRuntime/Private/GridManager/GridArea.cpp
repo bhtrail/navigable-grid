@@ -71,6 +71,7 @@ void AGridArea::DrawAllDebugTraces()
 bool AGridArea::FindPath(const FIntVector Source, const FIntVector Destination, TArray<FIntVector>& OutPath)
 {
 
+	// TODO use the built-in A-star search
 	FAStarSearch Search(Source, Destination, TileCalculator.GetEvenIfUnreachable());
 
 	int32 Step = 0;
