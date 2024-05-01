@@ -63,16 +63,15 @@ void FGridEditor::StartupModule()
 
 	PropertyModule.NotifyCustomizationModuleChanged();
 
-	
 	static const FName PropertyEditor("PropertyEditor");
 
 	FPropertyEditorModule& PropertyEditorModule = FModuleManager::GetModuleChecked<FPropertyEditorModule>(PropertyEditor);
 	{
 		// TODO localization
 		TSharedRef<FPropertySection> Section = PropertyEditorModule.FindOrCreateSection(
-"Actor",
-"Grid",
-INVTEXT("Grid")
+			"Actor",
+			"Grid",
+			INVTEXT("Grid")
 		);
 		Section->AddCategory("Grid");
 	}

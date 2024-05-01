@@ -35,8 +35,8 @@ public:
 	void OnSettingsChanged(const FPropertyChangedEvent& PropertyChangedEvent);
 
 public:
-	USquareGridSettings* SquareGridSettings;
-	UHexagonGridSettings* HexagonGridSettings;
+	TObjectPtr<USquareGridSettings> SquareGridSettings;
+	TObjectPtr<UHexagonGridSettings> HexagonGridSettings;
 
 private:
 	void OnNewCurrentLevel();

@@ -182,7 +182,7 @@ FVector UGridUtilities::CalcGridDecalSize(EGridType GridType, float GridSize)
 		}
 	case EGridType::Hexagon:
 		{
-			FVector DecalSize(GridSize, GridSize * 2, GridSize * FMath::Sqrt(3));
+			FVector DecalSize(GridSize, GridSize * 2, GridSize * FMath::Sqrt(3.));
 
 			DecalSize /= 2;
 

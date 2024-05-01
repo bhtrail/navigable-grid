@@ -151,7 +151,7 @@ UGrid* AHexagonGridManager::GetGridByPosition(const FVector& Position)
 
 UHexagonGrid* AHexagonGridManager::GetHexagonGridByPosition(const FVector& Position)
 {
-	float X = (Position.X * FMath::Sqrt(3) / 3 - Position.Y / 3) / GridSize;
+	float X = (Position.X * FMath::Sqrt(3.) / 3 - Position.Y / 3) / GridSize;
 	float Z = Position.Y * 2 / 3 / GridSize;
 	float Y = -X - Z;
 

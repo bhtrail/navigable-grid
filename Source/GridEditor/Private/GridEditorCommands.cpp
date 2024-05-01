@@ -11,7 +11,7 @@ FName FGridEditorCommands::HexagonModeName = "ToolMode_Hexagon";
 TMap<FName, TSharedPtr<FUICommandInfo> > FGridEditorCommands::NameToCommandMap;
 
 FGridEditorCommands::FGridEditorCommands()
-	: TCommands<FGridEditorCommands>("GridEditor", NSLOCTEXT("Contexts", "GridEditor", "Grid Editor"), NAME_None, FEditorStyle::GetStyleSetName())
+	: TCommands<FGridEditorCommands>("GridEditor", NSLOCTEXT("Contexts", "GridEditor", "Grid Editor"), NAME_None, FAppStyle::GetAppStyleSetName())
 {
 
 }

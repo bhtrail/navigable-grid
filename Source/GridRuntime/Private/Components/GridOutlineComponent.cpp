@@ -210,7 +210,7 @@ public:
 		FIntVector Coord, CounterCoord;
 		TArray<FIntVector> Dir2Grids[T::Max];
 		TMap<FIntVector, FVector> Coord2Center;
-		T::EEdgeDirection CounterDir;
+		typename T::EEdgeDirection CounterDir;
 
 		for (int i = 0; i < GridGroup.Num(); ++i)
 		{
@@ -220,7 +220,7 @@ public:
 
 			for (int DirIndex = 0; DirIndex < T::Max; ++DirIndex)
 			{
-				GetCounterEdge((T::EEdgeDirection)DirIndex, Coord, CounterDir, CounterCoord);
+				GetCounterEdge((typename T::EEdgeDirection)DirIndex, Coord, CounterDir, CounterCoord);
 
 				if (Dir2Grids[CounterDir].Contains(CounterCoord))
 				{
@@ -243,7 +243,7 @@ public:
 				Edge.Coord = Grids[j];
 				Edge.Color = GridGroup[0]->Color;;
 				Edge.GridCenter = Coord2Center.FindChecked(Edge.Coord);
-				Edge.Direction = (T::EEdgeDirection)i;
+				Edge.Direction = (typename T::EEdgeDirection)i;
 				OutlineEdges.Add(Edge);
 			}
 		}
@@ -254,7 +254,7 @@ public:
 	{
 		TArray<T> Result;
 		FIntVector CounterCoord;
-		T::EEdgeDirection CounterDir;
+		typename T::EEdgeDirection CounterDir;
 		for (int i = 0; i < OutlineEdges.Num(); ++i)
 		{
 			T& Edge = OutlineEdges[i];

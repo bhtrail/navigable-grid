@@ -23,7 +23,11 @@ void SGridEditor::Construct(const FArguments& InArgs, TSharedRef<FGridEditorTool
 	}
 
 	FPropertyEditorModule& PropertyEditorModule = FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");
-	FDetailsViewArgs DetailsViewArgs(false, false, false, FDetailsViewArgs::HideNameArea);
+	FDetailsViewArgs DetailsViewArgs;
+	DetailsViewArgs.bUpdatesFromSelection = false;
+	DetailsViewArgs.bLockable = false;
+	DetailsViewArgs.bAllowSearch = false;
+	DetailsViewArgs.NameAreaSettings = FDetailsViewArgs::HideNameArea;	
 
 	FEdModeGridEditor* GridEditorMode = GetEditorMode();
 
@@ -59,7 +63,7 @@ void SGridEditor::Construct(const FArguments& InArgs, TSharedRef<FGridEditorTool
 					+ SOverlay::Slot()
 					[
 						SNew(SBorder)
-						.BorderImage(FEditorStyle::GetBrush("ToolPanel.GroupBorder"))
+						.BorderImage(FAppStyle::GetBrush("ToolPanel.GroupBorder"))
 						.HAlign(HAlign_Center)
 						[
 							ModeSwitchButtons.MakeWidget()

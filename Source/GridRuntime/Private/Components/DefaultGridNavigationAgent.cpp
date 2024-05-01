@@ -1,4 +1,5 @@
 #include "Components/DefaultGridNavigationAgent.h"
+#include "Navigation/PathFollowingComponent.h"
 #include "GridRuntimePCH.h"
 #include "NavigationSystem.h"
 #include "NavigationPath.h"
